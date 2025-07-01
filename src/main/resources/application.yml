@@ -11,8 +11,7 @@ spring:
 ocr:
   tesseract:
     data-path: src/main/resources/tessdata
-    language: kor+eng
-    ocr-engine-mode: 1
+    language: eng
 
 logging:
   level:
