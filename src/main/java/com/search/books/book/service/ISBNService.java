@@ -29,19 +29,32 @@ public class ISBNService
             return null;
         }
 
-        List<String> cadidates = extractAllPossibleISBNs(ocrText);
+        String isbn = extractISBNWithContext(ocrText);
+        if (isbn != null) {
+            return isbn;
+        }
 
-        if (cadidates.isEmpty()) {
+        List<String> candidates = extractAllPossibleISBNs(ocrText);
+
+        if (candidates.isEmpty()) {
             return null;
         }
 
-        for (String isbn : cadidates) {
-            if (isbn.length() == 13 && (isbn.startsWith("978") || isbn.startsWith("979"))) {
-                return isbn;
+        for (String candidate : candidates) {
+            if (candidate.length() == 13 && (candidate.startsWith("978") || candidate.startsWith("979"))) {
+                return candidate;
             }
+
+            if (candidate.length() == 10 && isValidISBN10(candidate)) {
+                String isbn13 = convertISBN10ToISBN13(candidate);
+                if (isbn13 != null) {
+                    return isbn13; // 변환된 ISBN-13 반환
+                }
+            }
+
         }
 
-        return cadidates.get(0);
+        return candidates.get(0);
     }
 
     /**
@@ -98,9 +111,9 @@ public class ISBNService
         String cleanedISBN = cleanISBN(isbn);
 
         if (cleanedISBN.length() == 13) {
-            return true;
+            return isValidISBN13(cleanedISBN);
         } else if (cleanedISBN.length() == 10) {
-            return true;
+            return isValidISBN10(cleanedISBN);
         }
 
         return false;
@@ -111,7 +124,11 @@ public class ISBNService
      */
     private boolean isValidISBN13(String isbn)
     {
-        if (!isbn.matches("\\d{13}") || !isbn.startsWith("978") || !isbn.startsWith("979")) {
+        if (!isbn.matches("\\d{13}")) {
+            return false;
+        }
+
+        if (!isbn.startsWith("978") && !isbn.startsWith("979")) {
             return false;
         }
 
@@ -164,20 +181,24 @@ public class ISBNService
     /**
      * 컨텍스트 기반 ISBN 찾기 (정확도 향상)
      */
-    public String extractISBNWithContext(String ocrText)
+    private String extractISBNWithContext(String ocrText)
     {
         if (ocrText == null || ocrText.trim().isEmpty()) {
             return null;
         }
 
-        String[] lines = ocrText.split("\n");
+        String[] lines = ocrText.split("\\n");
 
         for (String line : lines) {
             if (line.toUpperCase().contains("ISBN")) {
-                String isbn = extractISBN(line);
+                String numbersOnly = line.replaceAll("[^0-9]", "");
 
-                if (isbn != null) {
-                    return isbn;
+                for (int i = 0; i <= numbersOnly.length() - 13; i++) {
+                    String candidate = numbersOnly.substring(i, i + 13);
+
+                    if (candidate.startsWith("978") || candidate.startsWith("979")) {
+                        return candidate;
+                    }
                 }
             }
         }
