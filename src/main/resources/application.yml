@@ -2,11 +2,29 @@ spring:
   application:
     name: search-books
 
+  profiles:
+    active: local
+
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 ocr:
   tesseract:
