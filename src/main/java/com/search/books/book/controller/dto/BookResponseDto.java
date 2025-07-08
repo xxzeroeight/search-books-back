@@ -1,0 +1,50 @@
+package com.search.books.book.controller.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.search.books.book.entity.Book;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Builder
+@Getter
+public class BookResponseDto
+{
+    private Long id;
+    private String isbn;
+    private String title;
+    private String author;
+    private String publisher;
+    private LocalDate publishDate;
+    private String description;
+    private String imageUrl;
+    private String category;
+    private int pageCount;
+    private String language;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
+
+    public static BookResponseDto from(Book book) {
+        return BookResponseDto.builder()
+                .id(book.getId())
+                .isbn(book.getIsbn())
+                .title(book.getTitle() != null ? book.getTitle() : "")
+                .author(book.getAuthor() != null ? book.getAuthor() : "")
+                .publisher(book.getPublisher() != null ? book.getPublisher() : "")
+                .publishDate(book.getPublishedDate())
+                .description(book.getDescription() != null ? book.getDescription() : "")
+                .imageUrl(book.getImageUrl() != null ? book.getImageUrl() : "")
+                .category(book.getCategory() != null ? book.getCategory() : "")
+                .language(book.getLanguage() != null ? book.getLanguage() : "")
+                .pageCount(book.getPageCount())
+                .createdAt(book.getCreatedAt())
+                .updatedAt(book.getUpdatedAt())
+                .build();
+    }
+}
