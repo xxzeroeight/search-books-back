@@ -1,7 +1,9 @@
 package com.search.books.book.controller.api;
 
+import com.search.books.book.controller.dto.BookResponseDto;
 import com.search.books.book.entity.Book;
 import com.search.books.book.service.BookService;
+import com.search.books.global.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,34 +30,15 @@ public class BookController
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", result.getMessage(),
-                    "book", createBookResponseMap(result.getBook()),
-                    "timestamp", LocalDateTime.now()
+                    "book", BookResponseDto.from(result.getBook()),
+                    "timestamp", DateTimeUtils.nowAsStandard()
             ));
         } else {
             return ResponseEntity.badRequest().body(Map.of(
                     "success", false,
                     "error", result.getError(),
-                    "timestamp", LocalDateTime.now()
+                    "timestamp", DateTimeUtils.nowAsStandard()
             ));
         }
-    }
-
-    /**
-     * Book 엔티티를 응답용 Map으로 변환
-     */
-    private Map<String, Object> createBookResponseMap(Book book)
-    {
-        return Map.of(
-                "id", book.getId(),
-                "isbn", book.getIsbn(),
-                "title", book.getTitle() != null ? book.getTitle() : "",
-                "author", book.getAuthor() != null ? book.getAuthor() : "",
-                "publisher", book.getPublisher() != null ? book.getPublisher() : "",
-                "publishDate", book.getPublishedDate(),
-                "description", book.getDescription() != null ? book.getDescription() : "",
-                "imageUrl", book.getImageUrl() != null ? book.getImageUrl() : "",
-                "createdAt", book.getCreatedAt(),
-                "updatedAt", book.getUpdatedAt()
-        );
     }
 }

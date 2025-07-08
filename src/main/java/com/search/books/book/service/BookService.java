@@ -51,6 +51,9 @@ public class BookService
                 .description(bookInfoDto.getDescription())
                 .publisher(bookInfoDto.getPublisher())
                 .publishedDate(bookInfoDto.getPublishDate())
+                .category(bookInfoDto.getCategory())
+                .pageCount(bookInfoDto.getPageCount())
+                .language(bookInfoDto.getLanguage())
                 .imageUrl(bookInfoDto.getImageUrl())
                 .build();
 
