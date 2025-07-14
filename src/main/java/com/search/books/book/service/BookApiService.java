@@ -1,16 +1,11 @@
 package com.search.books.book.service;
 
-import com.search.books.book.controller.dto.BookInfoDto;
-import com.search.books.book.controller.dto.GoogleBooksResponseDto;
-import com.search.books.book.controller.dto.ImageLinksDto;
-import com.search.books.book.controller.dto.VolumeInfoDto;
+import com.search.books.book.controller.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -84,12 +79,21 @@ public class BookApiService
      */
     private BookInfoDto convertToBookInfoDto(VolumeInfoDto volumeInfoDto, String isbn)
     {
+        List<IndustryIdentifierDto> identifiers = volumeInfoDto.getIndustryIdentifiers();
+
+        String isbn10 = extractIsbn10(identifiers);
+        String isbn13 = extractIsbn13(identifiers);
+        String primaryIsbn = getPrimaryIsbn(identifiers);
+
         return BookInfoDto.builder()
-                .isbn(isbn)
+                .isbn(primaryIsbn)
+                .isbn10(isbn10)
+                .isbn13(isbn13)
                 .title(volumeInfoDto.getTitle())
+                .subtitle(volumeInfoDto.getSubtitle())
                 .author(getSafeAuthors(volumeInfoDto))
                 .publisher(volumeInfoDto.getPublisher())
-                .publishDate(parsePublishDate(volumeInfoDto.getPublishedDate()))
+                .publishedDate(volumeInfoDto.getPublishedDate())
                 .description(volumeInfoDto.getDescription())
                 .imageUrl(getBestImageUrl(volumeInfoDto.getImageLinks()))
                 .pageCount(volumeInfoDto.getPageCount())
@@ -114,34 +118,6 @@ public class BookApiService
         }
 
         return authorString;
-    }
-
-    /**
-     * 출판일 파싱
-     */
-    private LocalDate parsePublishDate(String publishedDate)
-    {
-        if (publishedDate == null || publishedDate.trim().isEmpty()) {
-            return null;
-        }
-
-        String cleanDate = publishedDate.trim();
-
-        if (cleanDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            return LocalDate.parse(cleanDate, DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-
-        // YYYY-MM 형식
-        if (cleanDate.matches("\\d{4}-\\d{2}")) {
-            return LocalDate.parse(cleanDate + "-01", DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-
-        // YYYY 형식
-        if (cleanDate.matches("\\d{4}")) {
-            return LocalDate.parse(cleanDate + "-01-01", DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-
-        return null;
     }
 
     /**
@@ -182,5 +158,36 @@ public class BookApiService
             category = category.substring(0, 97) + "...";
         }
         return category;
+    }
+
+    /**
+     * isbn10 추출
+     */
+    private String extractIsbn10(List<IndustryIdentifierDto> identifiers) {
+        if (identifiers == null) return null;
+
+        return identifiers.stream()
+                .filter(id -> "ISBN_10".equals(id.getType()))
+                .map(IndustryIdentifierDto::getIdentifier)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String extractIsbn13(List<IndustryIdentifierDto> identifiers) {
+        if (identifiers == null) return null;
+
+        return identifiers.stream()
+                .filter(id -> "ISBN_13".equals(id.getType()))
+                .map(IndustryIdentifierDto::getIdentifier)
+                .findFirst()
+                .orElse(null);
+    }
+
+    // 주 ISBN 결정 (ISBN-13 우선, 없으면 ISBN-10)
+    private String getPrimaryIsbn(List<IndustryIdentifierDto> identifiers) {
+        String isbn13 = extractIsbn13(identifiers);
+        String isbn10 = extractIsbn10(identifiers);
+
+        return isbn13 != null ? isbn13 : isbn10;
     }
 }

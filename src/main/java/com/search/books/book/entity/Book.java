@@ -27,11 +27,20 @@ public class Book
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "isbn", unique = true, nullable = false, length = 20)
-    private String isbn;
+    @Column(name = "isbn_10", length = 10)
+    private String isbn10;
+
+    @Column(name = "isbn_13", length = 13)
+    private String isbn13;
+
+    @Column(name = "primary_isbn", length = 13, nullable = false, unique = true)
+    private String primaryIsbn;
 
     @Column(name = "title", nullable = false, length = 500)
     private String title;
+
+    @Column(name = "subtitle", length = 500)
+    private String subtitle;
 
     @Column(name = "author", length = 300)
     private String author;
@@ -42,8 +51,8 @@ public class Book
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "publiced_data")
-    private LocalDate publishedDate;
+    @Column(name = "published_date")
+    private String publishedDate;
 
     @Column(name = "image_url", length = 1000)
     private String imageUrl;

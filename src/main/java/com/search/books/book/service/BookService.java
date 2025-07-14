@@ -17,6 +17,7 @@ public class BookService
     private final OCRService ocrService;
     private final ISBNService isbnService;
     private final BookApiService bookApiService;
+
     private final BookReposiroty bookReposiroty;
 
     public BookProcessResult processBookImage(MultipartFile imageFile)
@@ -24,7 +25,7 @@ public class BookService
         String ocrText = ocrService.extractTextFromImage(imageFile);
 
         String isbn = isbnService.extractISBN(ocrText);
-        Optional<Book> existingBook = bookReposiroty.findBookByIsbn(isbn);
+        Optional<Book> existingBook = bookReposiroty.findBookByPrimaryIsbn(isbn);
         if (existingBook.isPresent()) {
             return BookProcessResult.success(existingBook.get(), "이미 등록된 도서입니다.");
         }
@@ -44,13 +45,18 @@ public class BookService
      */
     private Book saveBook(BookInfoDto bookInfoDto)
     {
+        String primaryIsbn = !bookInfoDto.getIsbn13().isEmpty() ? bookInfoDto.getIsbn13() : bookInfoDto.getIsbn10();
+
         Book book = Book.builder()
-                .isbn(bookInfoDto.getIsbn())
+                .isbn10(bookInfoDto.getIsbn10())
+                .isbn13(bookInfoDto.getIsbn13())
+                .primaryIsbn(primaryIsbn)
                 .title(bookInfoDto.getTitle())
+                .subtitle(bookInfoDto.getSubtitle())
                 .author(bookInfoDto.getAuthor())
                 .description(bookInfoDto.getDescription())
                 .publisher(bookInfoDto.getPublisher())
-                .publishedDate(bookInfoDto.getPublishDate())
+                .publishedDate(bookInfoDto.getPublishedDate())
                 .category(bookInfoDto.getCategory())
                 .pageCount(bookInfoDto.getPageCount())
                 .language(bookInfoDto.getLanguage())
@@ -58,14 +64,6 @@ public class BookService
                 .build();
 
         return bookReposiroty.save(book);
-    }
-
-    /**
-     * ISBN으로 도서 조회
-     */
-    public Optional<Book> findBookByIsbn(String isbn)
-    {
-        return bookReposiroty.findBookByIsbn(isbn);
     }
 
     /**
