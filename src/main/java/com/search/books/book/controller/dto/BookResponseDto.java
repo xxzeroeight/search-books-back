@@ -2,10 +2,10 @@ package com.search.books.book.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.search.books.book.entity.Book;
+import com.search.books.global.TranslationUtils;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -15,9 +15,10 @@ public class BookResponseDto
     private Long id;
     private String isbn;
     private String title;
+    private String subtitle;
     private String author;
     private String publisher;
-    private LocalDate publishDate;
+    private String publishedDate;
     private String description;
     private String imageUrl;
     private String category;
@@ -33,15 +34,16 @@ public class BookResponseDto
     public static BookResponseDto from(Book book) {
         return BookResponseDto.builder()
                 .id(book.getId())
-                .isbn(book.getIsbn())
+                .isbn(book.getPrimaryIsbn())
                 .title(book.getTitle() != null ? book.getTitle() : "")
+                .subtitle(book.getSubtitle() != null ? book.getSubtitle() : "")
                 .author(book.getAuthor() != null ? book.getAuthor() : "")
                 .publisher(book.getPublisher() != null ? book.getPublisher() : "")
-                .publishDate(book.getPublishedDate())
+                .publishedDate(book.getPublishedDate())
                 .description(book.getDescription() != null ? book.getDescription() : "")
                 .imageUrl(book.getImageUrl() != null ? book.getImageUrl() : "")
-                .category(book.getCategory() != null ? book.getCategory() : "")
-                .language(book.getLanguage() != null ? book.getLanguage() : "")
+                .category(TranslationUtils.translateCategory(book.getCategory() != null ? book.getCategory() : ""))
+                .language(TranslationUtils.translateLanguage(book.getLanguage() != null ? book.getLanguage() : ""))
                 .pageCount(book.getPageCount())
                 .createdAt(book.getCreatedAt())
                 .updatedAt(book.getUpdatedAt())

@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -14,10 +12,13 @@ import java.time.LocalDate;
 public class BookInfoDto
 {
     private String isbn;
+    private String isbn10;
+    private String isbn13;
     private String title;
+    private String subtitle;
     private String author;
     private String publisher;
-    private LocalDate publishDate;
+    private String publishedDate;
     private String description;
     private String imageUrl;
     private Integer pageCount;
