@@ -1,6 +1,6 @@
 package com.search.books.book.service;
 
-import com.search.books.global.Constants;
+import com.search.books.global.constants.BookConstants;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class ISBNService
 
     public ISBNService()
     {
-        this.isbn13Pattern = Pattern.compile(Constants.ISBN_13_PATTERN, Pattern.CASE_INSENSITIVE);
-        this.isbn10Pattern = Pattern.compile(Constants.ISBN_10_PATTERN, Pattern.CASE_INSENSITIVE);
+        this.isbn13Pattern = Pattern.compile(BookConstants.ISBN_13_PATTERN, Pattern.CASE_INSENSITIVE);
+        this.isbn10Pattern = Pattern.compile(BookConstants.ISBN_10_PATTERN, Pattern.CASE_INSENSITIVE);
     }
 
     /**

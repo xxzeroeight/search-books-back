@@ -2,7 +2,7 @@ package com.search.books.book.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.search.books.book.entity.Book;
-import com.search.books.global.TranslationUtils;
+import com.search.books.global.utils.TranslationUtils;
 import lombok.Builder;
 import lombok.Getter;
 
