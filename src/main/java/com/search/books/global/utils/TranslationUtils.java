@@ -1,4 +1,6 @@
-package com.search.books.global;
+package com.search.books.global.utils;
+
+import com.search.books.global.constants.BookConstants;
 
 public class TranslationUtils
 {
@@ -9,7 +11,7 @@ public class TranslationUtils
         }
 
         String lowerCategory = category.toLowerCase();
-        return Constants.CATEGORY_TRANSLATIONS.getOrDefault(lowerCategory, category);
+        return BookConstants.CATEGORY_TRANSLATIONS.getOrDefault(lowerCategory, category);
     }
 
     public static String translateLanguage(String language)
@@ -19,6 +21,6 @@ public class TranslationUtils
         }
 
         String lowerLanguage = language.toLowerCase();
-        return Constants.LANGUAGE_TRANSLATIONS.getOrDefault(lowerLanguage, language);
+        return BookConstants.LANGUAGE_TRANSLATIONS.getOrDefault(lowerLanguage, language);
     }
 }
