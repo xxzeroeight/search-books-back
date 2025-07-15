@@ -5,6 +5,7 @@ import com.search.books.book.entity.Book;
 import com.search.books.book.respository.BookReposiroty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,15 +18,16 @@ public class BookService
     private final OCRService ocrService;
     private final ISBNService isbnService;
     private final BookApiService bookApiService;
+    private final BookCacheService bookCacheService;
 
     private final BookReposiroty bookReposiroty;
 
     public BookProcessResult processBookImage(MultipartFile imageFile)
     {
         String ocrText = ocrService.extractTextFromImage(imageFile);
-
         String isbn = isbnService.extractISBN(ocrText);
-        Optional<Book> existingBook = bookReposiroty.findBookByPrimaryIsbn(isbn);
+
+        Optional<Book> existingBook = bookCacheService.findBookByIsbn(isbn);
         if (existingBook.isPresent()) {
             return BookProcessResult.success(existingBook.get(), "이미 등록된 도서입니다.");
         }
@@ -85,11 +87,13 @@ public class BookService
             this.error = error;
         }
 
-        public static BookProcessResult success(Book book, String message) {
+        public static BookProcessResult success(Book book, String message)
+        {
             return new BookProcessResult(true, message, book, null);
         }
 
-        public static BookProcessResult error(String error) {
+        public static BookProcessResult error(String error)
+        {
             return new BookProcessResult(false, null, null, error);
         }
     }

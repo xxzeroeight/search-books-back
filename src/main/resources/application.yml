@@ -11,6 +11,22 @@ spring:
       hibernate:
         format_sql: true
 
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+
+  cache:
+    type: redis
+    redis:
+      cache-null-values: false
+
   http:
     encoding:
       charset: UTF-8
@@ -30,6 +46,12 @@ ocr:
   tesseract:
     data-path: src/main/resources/tessdata
     language: eng
+
+cache:
+  books:
+    ttl: 3600
+  book-info:
+    ttl: 1800
 
 logging:
   level:
