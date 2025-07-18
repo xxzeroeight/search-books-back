@@ -28,10 +28,10 @@ import java.util.Map;
 @EnableCaching
 public class RedisConfig {
 
-    @Value("${cache.books.ttl:3600}")
+    @Value("${cache.books.ttl}")
     private long booksTtl;
 
-    @Value("${cache.book-info.ttl:1800}")
+    @Value("${cache.book-info.ttl}")
     private long bookInfoTtl;
 
     @Bean

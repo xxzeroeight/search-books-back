@@ -30,6 +30,7 @@ dependencies {
 
 	/* DB */
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	/* Tesseract OCR */
 	implementation 'net.sourceforge.tess4j:tess4j:5.8.0'
@@ -50,6 +51,9 @@ dependencies {
 	/* Test */
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	/* Config */
+	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
 }
 
 tasks.named('test') {
