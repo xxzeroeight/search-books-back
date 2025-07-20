@@ -61,5 +61,5 @@ tasks.named('test') {
 }
 
 tasks.named('bootRun') {
-	jvmArgs = ['-Xmx2g', '-Xms1g']
+	jvmArgs = ['-Xmx1024m', '-Xms512m']
 }
