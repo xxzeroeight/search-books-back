@@ -14,8 +14,20 @@ spring:
   cache:
     type: redis
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+
 server:
   port: 8080
+  forward-headers-strategy: framework
+  tomcat:
+    remoteip:
+      remote-ip-header: x-forwarded-for
+      protocol-header: x-forwarded-proto
+      internal-proxies: 127\.0\.0\.1|::1|0:0:0:0:0:0:0:1
 
 api:
   google-books:
