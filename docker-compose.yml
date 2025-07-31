@@ -76,8 +76,7 @@ services:
       - TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata/  # OCR 데이터 경로
       - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib       # 라이브러리 경로
 
-    expose:
-      - "8080"
+    ports: []
 
   # Nginx
   nginx:
@@ -88,7 +87,6 @@ services:
       - app
 
     ports:
-      - "8080:8080"
       - "80:80" # HTTP
       - "443:443" #HTTPS
 
