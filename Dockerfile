@@ -2,6 +2,15 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
+# 시스템 업데이트 및 Tesseract OCR 설치
+RUN apt-get update && \
+    apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    libtesseract-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # 빌드 파일들 복사
 COPY gradle/ gradle/
 COPY gradlew build.gradle settings.gradle ./
