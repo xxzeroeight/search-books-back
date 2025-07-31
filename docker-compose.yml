@@ -75,8 +75,26 @@ services:
       - TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata/  # OCR 데이터 경로
       - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib       # 라이브러리 경로
 
+    expose:
+      - "8080"
+
+  # Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+
+    depends_on:
+      - app
+
     ports:
       - "8080:8080"
+      - "80:80" # HTTP
+      - "443:443" #HTTPS
+
+    # 설정 파일과 SSL 인증서 마운트
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro          # Nginx 설정 파일 (읽기 전용)
+      - /etc/letsencrypt:/etc/letsencrypt:ro         # SSL 인증서 (읽기 전용)
 
 volumes:
   mysql_data:
