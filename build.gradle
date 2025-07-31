@@ -63,3 +63,7 @@ tasks.named('test') {
 tasks.named('bootRun') {
 	jvmArgs = ['-Xmx1024m', '-Xms512m']
 }
+
+jar {
+	enabled = false
+}

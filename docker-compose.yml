@@ -26,10 +26,10 @@ services:
     # 컨테이너 상태 확인
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${DB_PASSWORD}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 2
-      start_period: 30s
+      interval: 120s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
     # 컨테이너 자동 재시작
     restart: unless-stopped
@@ -45,9 +45,10 @@ services:
       - redis_data:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 2
+      interval: 120s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     restart: unless-stopped
 
   # Spring Boot
