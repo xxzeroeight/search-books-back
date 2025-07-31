@@ -26,7 +26,7 @@ RUN cp build/libs/*.jar app.jar
 
 # Tesseract 데이터를 위한 심볼릭 링크 생성
 RUN mkdir -p /app/src/main/resources && \
-    ln -s /usr/share/tesseract-ocr/5/tessdata /app/src/main/resources/tessdata
+    ln -s /usr/share/tesseract-ocr/4.00/tessdata /app/src/main/resources/tessdata
 
 # 환경변수 설정
 ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/
