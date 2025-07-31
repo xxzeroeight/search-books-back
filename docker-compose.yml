@@ -41,14 +41,6 @@ services:
     container_name: redis-cache
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 2
-    restart: unless-stopped
 
   # Spring Boot
   app:
@@ -79,23 +71,5 @@ services:
     expose:
       - "8080" # ports와 달리 외부에서 직접 접근 불가
 
-  # Nginx
-  nginx:
-    image: nginx:alpine
-    container_name: nginx-proxy
-
-    depends_on:
-      - app
-
-    ports:
-      - "80:80" # HTTP
-      - "443:443" #HTTPS
-
-    # 설정 파일과 SSL 인증서 마운트
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro          # Nginx 설정 파일 (읽기 전용)
-      - /etc/letsencrypt:/etc/letsencrypt:ro         # SSL 인증서 (읽기 전용)
-
 volumes:
   mysql_data:
-  redis_data:
