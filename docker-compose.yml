@@ -73,8 +73,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - GOOGLE_BOOKS_API_KEY=${GOOGLE_BOOKS_API_KEY}
-      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/  # OCR 데이터 경로
-      - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib       # 라이브러리 경로
 
     ports: []
 

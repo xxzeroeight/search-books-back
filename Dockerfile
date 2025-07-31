@@ -1,6 +1,4 @@
-FROM ubuntu:latest
-
-WORKDIR /app
+FROM openjdk:17-jdk-slim
 
 # 시스템 업데이트 및 Tesseract OCR 설치
 RUN apt-get update && \
@@ -10,13 +8,9 @@ RUN apt-get update && \
     tesseract-ocr-eng \
     libtesseract-dev \
     curl \
-    wget \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Java 환경변수 설정
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-ENV PATH=$PATH:$JAVA_HOME/bin
+WORKDIR /app
 
 # 빌드 파일들 복사
 COPY gradle/ gradle/
@@ -29,6 +23,14 @@ RUN ./gradlew build -x test
 
 # JAR 파일 복사
 RUN cp build/libs/*.jar app.jar
+
+# Tesseract 데이터를 위한 심볼릭 링크 생성
+RUN mkdir -p /app/src/main/resources && \
+    ln -s /usr/share/tesseract-ocr/5/tessdata /app/src/main/resources/tessdata
+
+# 환경변수 설정
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/
+ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib
 
 # 포트 노출
 EXPOSE 8080
