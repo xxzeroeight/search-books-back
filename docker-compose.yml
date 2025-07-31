@@ -17,23 +17,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-    # 컨테이너 시작시 실행할 명령어 (MySQL 설정)
-    command:
-      - --default-authentication-plugin=mysql_native_password # 인증 방식
-      - --character-set-server=utf8mb4 # 문자셋 (한글 지원)
-      - --collation-server=utf8mb4_unicode_ci # 정렬 규칙
-
-    # 컨테이너 상태 확인
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${DB_PASSWORD}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 2
-      start_period: 30s
-
-    # 컨테이너 자동 재시작
-    restart: unless-stopped
-
   # Redis
   redis:
     # 경량화된 Alpine Linux 기반 Redis
@@ -50,10 +33,8 @@ services:
 
     # 의존성 설정: 다른 서비스가 준비된 후 시작
     depends_on:
-      mysql:
-        condition: service_healthy # MySQL이 healthy 상태일 때만 시작
-      redis:
-        condition: service_healthy # Redis가 healthy 상태일 때만 시작
+      - mysql
+      - redis
 
     # Spring Boot 환경변수
     environment:
@@ -64,12 +45,9 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - GOOGLE_BOOKS_API_KEY=${GOOGLE_BOOKS_API_KEY}
-      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata/  # OCR 데이터 경로
-      - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib       # 라이브러리 경로
 
-    # 내부 네트워크에서만 접근 가능한 포트
-    expose:
-      - "8080" # ports와 달리 외부에서 직접 접근 불가
+    ports:
+      - "8080"
 
 volumes:
   mysql_data:
