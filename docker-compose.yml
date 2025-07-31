@@ -47,7 +47,7 @@ services:
       - GOOGLE_BOOKS_API_KEY=${GOOGLE_BOOKS_API_KEY}
 
     ports:
-      - "8080"
+      - "8080:8080"
 
 volumes:
   mysql_data:
