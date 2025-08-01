@@ -41,12 +41,20 @@ public class BookResponseDto
                 .publisher(book.getPublisher() != null ? book.getPublisher() : "")
                 .publishedDate(book.getPublishedDate())
                 .description(book.getDescription() != null ? book.getDescription() : "")
-                .imageUrl(book.getImageUrl() != null ? book.getImageUrl() : "")
+                .imageUrl(book.getImageUrl() != null ? convertToHttps(book.getImageUrl()) : "")
                 .category(TranslationUtils.translateCategory(book.getCategory() != null ? book.getCategory() : ""))
                 .language(TranslationUtils.translateLanguage(book.getLanguage() != null ? book.getLanguage() : ""))
                 .pageCount(book.getPageCount())
                 .createdAt(book.getCreatedAt())
                 .updatedAt(book.getUpdatedAt())
                 .build();
+    }
+
+    private static String convertToHttps(String url)
+    {
+        if (url != null && url.startsWith("http://")) {
+            return url.replace("http://", "https://");
+        }
+        return url;
     }
 }
