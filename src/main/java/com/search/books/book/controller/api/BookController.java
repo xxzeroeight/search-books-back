@@ -19,7 +19,7 @@ public class BookController
     /**
      * 메인 API: 이미지에서 도서 정보 추출 및 저장
      */
-    @PostMapping("/api/books/save-and-extract")
+    @PostMapping("/api/books/images")
     public ResponseEntity<Map<String, Object>> extractAndSaveBook(@RequestParam("image") MultipartFile imageFile)
     {
         BookService.BookProcessResult result = bookService.processBookImage(imageFile);
